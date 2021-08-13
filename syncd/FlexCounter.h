@@ -110,6 +110,9 @@ namespace syncd
             void removeSwitchDebugCounters(
                     _In_ sai_object_id_t switchVid);
 
+            void removeMACsecFlow(
+                    _In_ sai_object_id_t macsecFlowVid);
+
             void removeMACsecSA(
                     _In_ sai_object_id_t macsecSAVid);
 
@@ -150,6 +153,16 @@ namespace syncd
                     _In_ sai_object_id_t bufferPoolRid,
                     _In_ const std::vector<sai_buffer_pool_stat_t>& counterIds,
                     _In_ const std::string& statsMode);
+
+            void setMACsecFlowCounterList(
+                    _In_ sai_object_id_t macsecFlowVid,
+                    _In_ sai_object_id_t macsecFlowRid,
+                    _In_ const std::vector<sai_macsec_flow_stat_t> &counterIds);
+
+            void setMACsecSACounterList(
+                    _In_ sai_object_id_t macsecSAVid,
+                    _In_ sai_object_id_t macsecSARid,
+                    _In_ const std::vector<sai_macsec_sa_stat_t> &counterIds);
 
         private: // set attr list
 
@@ -298,6 +311,16 @@ namespace syncd
                 std::vector<sai_router_interface_stat_t> rifCounterIds;
             };
 
+            struct MACsecFlowCounterIds
+            {
+                MACsecFlowCounterIds(
+                        _In_ sai_object_id_t macsecFlow,
+                        _In_ const std::vector<sai_macsec_flow_stat_t> &macsecFlowIds);
+
+                sai_object_id_t m_macsecFlowId;
+                std::vector<sai_macsec_flow_stat_t> m_macsecFlowCounterIds;
+            };
+
             struct MACsecSAAttrIds
             {
                 MACsecSAAttrIds(
@@ -306,6 +329,16 @@ namespace syncd
 
                 sai_object_id_t m_macsecSAId;
                 std::vector<sai_macsec_sa_attr_t> m_macsecSAAttrIds;
+            };
+
+            struct MACsecSACounterIds
+            {
+                MACsecSACounterIds(
+                        _In_ sai_object_id_t macsecSA,
+                        _In_ const std::vector<sai_macsec_sa_stat_t> &macsecSAIds);
+
+                sai_object_id_t m_macsecSAId;
+                std::vector<sai_macsec_sa_stat_t> m_macsecSACounterIds;
             };
 
         private:
@@ -350,6 +383,12 @@ namespace syncd
                     _In_ swss::Table &countersTable);
 
             void collectSwitchDebugCounters(
+                    _In_ swss::Table &countersTable);
+
+            void collectMACsecFlowCounters(
+                    _In_ swss::Table &countersTable);
+
+            void collectMACsecSACounters(
                     _In_ swss::Table &countersTable);
 
         private: // collect attributes
@@ -397,10 +436,11 @@ namespace syncd
             std::map<sai_object_id_t, std::shared_ptr<RifCounterIds>> m_rifCounterIdsMap;
             std::map<sai_object_id_t, std::shared_ptr<BufferPoolCounterIds>> m_bufferPoolCounterIdsMap;
             std::map<sai_object_id_t, std::shared_ptr<SwitchCounterIds>> m_switchDebugCounterIdsMap;
+            std::map<sai_object_id_t, std::shared_ptr<MACsecFlowCounterIds>> m_macsecFlowCounterIdsMap;
+            std::map<sai_object_id_t, std::shared_ptr<MACsecSACounterIds>> m_macsecSACounterIdsMap;
 
             std::map<sai_object_id_t, std::shared_ptr<QueueAttrIds>> m_queueAttrIdsMap;
             std::map<sai_object_id_t, std::shared_ptr<IngressPriorityGroupAttrIds>> m_priorityGroupAttrIdsMap;
-
             std::map<sai_object_id_t, std::shared_ptr<MACsecSAAttrIds>> m_macsecSAAttrIdsMap;
 
         private:
